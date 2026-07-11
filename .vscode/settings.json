@@ -1,3 +1,4 @@
 {
-    "dbt.dbtIntegration": "core"
+    "dbt.dbtIntegration": "core",
+    "dbt.perspectiveTheme": "Vintage"
 }

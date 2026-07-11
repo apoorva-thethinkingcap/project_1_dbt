@@ -1,4 +1,4 @@
-{{config(materialized='view')}}
+{{config(materialized='view')}}     -- Takes precedence over both properties.yml and dbt_project.yml
 
 SELECT
     *
