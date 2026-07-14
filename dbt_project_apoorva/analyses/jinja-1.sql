@@ -1,0 +1,1 @@
+{%- set var_mame = "Ansh Lamba" -%}   -- Declare {{ var_mame }}      -- Print
