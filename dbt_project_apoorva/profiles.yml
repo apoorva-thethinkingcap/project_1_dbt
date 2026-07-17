@@ -14,6 +14,6 @@ dbt_project_apoorva:
       http_path: /sql/1.0/warehouses/d21e700deeacaec8
       schema: default
       threads: 1
-      token: dapib3077842001609bebb7c1f0b944653a5
+      token: "REDACTED"
       type: databricks
   target: dev
