@@ -8,4 +8,12 @@ dbt_project_apoorva:
       threads: 1
       token: dapib3077842001609bebb7c1f0b944653a5
       type: databricks
+    prod:
+      catalog: dbt_project_prod
+      host: dbc-a920f698-7997.cloud.databricks.com
+      http_path: /sql/1.0/warehouses/d21e700deeacaec8
+      schema: default
+      threads: 1
+      token: "REDACTED"
+      type: databricks
   target: dev

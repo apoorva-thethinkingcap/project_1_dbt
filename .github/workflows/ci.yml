@@ -1,0 +1,67 @@
+name: dbt CI/CD
+
+on:
+  pull_request:          # CI: every PR gets tested
+    branches: [main]
+  push:                  # CD: merges to main deploy to prod
+    branches: [main]
+
+env:
+  DBT_PROFILES_DIR: ${{ github.workspace }}   # tell dbt where profiles.yml is
+
+jobs:
+  dbt:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dbt_project_apoorva   # dbt project lives in this subfolder
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dbt
+        run: pip install dbt-databricks
+
+      - name: Create profiles.yml
+        working-directory: ${{ github.workspace }}
+        run: |
+          cat > profiles.yml << EOF
+          dbt_project_apoorva:
+            target: dev
+            outputs:
+              dev:
+                type: databricks
+                host: dbc-a920f698-7997.cloud.databricks.com
+                http_path: /sql/1.0/warehouses/d21e700deeacaec8
+                catalog: dbt_project
+                schema: default
+                token: ${{ secrets.DBT_DATABRICKS_TOKEN }}
+                threads: 4
+              prod:
+                type: databricks
+                host: dbc-a920f698-7997.cloud.databricks.com
+                http_path: /sql/1.0/warehouses/d21e700deeacaec8
+                catalog: dbt_project_prod
+                schema: default
+                token: ${{ secrets.DBT_DATABRICKS_TOKEN }}
+                threads: 4
+          EOF
+
+      - name: Verify connection
+        run: dbt debug --target dev
+
+      # CI - runs on pull requests: build and test in dev
+      - name: Build and test (dev)
+        if: github.event_name == 'pull_request'
+        run: dbt build --target dev
+
+      # CD - runs on merge to main: deploy to prod
+      - name: Deploy (prod)
+        if: github.event_name == 'push'
+        run: dbt build --target prod
