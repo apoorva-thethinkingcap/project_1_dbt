@@ -8,3 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+logs/
+dbt_project_apoorva/logs/
+target/
+dbt_packages/
