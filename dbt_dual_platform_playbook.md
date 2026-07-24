@@ -159,9 +159,22 @@ Prompt must show `(dbt-ansh-lamba)` (or your venv name). Then:
 
 ```powershell
 echo $env:DBT_DATABRICKS_TOKEN      # sanity: token is present
-git branch                          # confirm: on feature_apoorva
+git branch                          # confirm: on main
 git status                          # see uncommitted work from last time
 ```
+
+If `git status` shows uncommitted work from a previous session, deal with it before starting
+new changes — don't let sessions pile up in one messy commit:
+
+```powershell
+git add <the changed files>         # stage them explicitly
+git commit -m "Describe what that work was"
+git push origin main
+git status                          # rerun: should now say "working tree clean"
+```
+
+(If you don't recognize the changes or aren't sure they're good, review with `git diff` first.
+Only commit what you understand.)
 
 Connection checks (run whichever platforms you'll use today):
 
@@ -177,6 +190,10 @@ All checks passed = ready. Notes:
 ---
 
 ## PART 2 — Running the pipeline (EVERY SESSION, as needed)
+
+> **Default target:** `profiles.yml` sets `target: bigquery`, so any dbt command without a
+> `--target` flag runs against **BigQuery**. To hit Databricks you must pass `--target dev`
+> or `--target prod` explicitly.
 
 ### 2.1 BigQuery (default target)
 
@@ -276,7 +293,7 @@ git diff models\source\sources.yaml
 ```powershell
 git add models\source\sources.yaml snapshots\gold_items.yml README.md
 git commit -m "Add BigQuery target support with cross-platform configs"
-git push origin feature_apoorva
+git push origin main
 ```
 
 Longer commit message version if you prefer detail:
@@ -287,7 +304,7 @@ git commit -m "Add BigQuery target support with cross-platform configs" -m "Targ
 
 ### 4.4 Post-push check
 
-- Open the repo on GitHub → `feature_apoorva` branch → confirm the commit landed
+- Open the repo on GitHub → `main` branch → confirm the commit landed
 - Click through the changed files — final visual check that no token, key, or personal path leaked
 - If a secret DID get pushed: revoke/regenerate the credential immediately (a push is public
   the moment it lands), then clean up the repo
