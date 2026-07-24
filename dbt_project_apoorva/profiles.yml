@@ -6,7 +6,7 @@ dbt_project_apoorva:
       http_path: /sql/1.0/warehouses/d21e700deeacaec8
       schema: default
       threads: 1
-      token: dapib3077842001609bebb7c1f0b944653a5
+      token: "{{ env_var('DBT_DATABRICKS_TOKEN') }}"
       type: databricks
     prod:
       catalog: dbt_project_prod
@@ -14,6 +14,14 @@ dbt_project_apoorva:
       http_path: /sql/1.0/warehouses/d21e700deeacaec8
       schema: default
       threads: 1
-      token: "REDACTED"
+      token: "{{ env_var('DBT_DATABRICKS_TOKEN') }}"
       type: databricks
-  target: dev
+    bigquery:
+      type: bigquery
+      method: service-account
+      project: gcp-dbt-project-503007
+      dataset: dbt_sales
+      location: asia-south1
+      threads: 4
+      keyfile: C:\Users\APOORVA KULKARNI\.gcp\dbt-runner-key.json
+  target: bigquery

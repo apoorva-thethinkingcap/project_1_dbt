@@ -1,7 +1,7 @@
 sources:
   - name: source
-    database: '{{ target.catalog }}'  
-    schema: source  
+    database: "{{ 'gcp-dbt-project-503007' if target.type == 'bigquery' else target.catalog }}"
+    schema: "{{ 'dbt_sales' if target.type == 'bigquery' else 'source' }}"
     tables:
       - name: fact_sales
       - name: fact_returns

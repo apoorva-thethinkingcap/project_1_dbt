@@ -3,8 +3,8 @@ snapshots:
     relation: ref('source_gold_items')
     config:
       schema: gold
-      database: '{{ target.catalog }}'
+      database: "{{ 'gcp-dbt-project-503007' if target.type == 'bigquery' else target.catalog }}"
       unique_key: id
       strategy: timestamp
       updated_at: updateDate
-      dbt_valid_to_current: "to_date('9999-12-31')" # Specifies that current records should have `dbt_valid_to` set to `'9999-12-31'` instead of `NULL`.
+      dbt_valid_to_current: "{{ \"timestamp('9999-12-31')\" if target.type == 'bigquery' else \"to_date('9999-12-31')\" }}"
